@@ -10,8 +10,8 @@ const app = express();
 // First will check if the user is authorized and then will allow the request to proceed
 // This can done by using two ways
 
-app.use("/admin", adminAuth); // This will check authorization for all routes under /admin and will call next() if authorized
-app.use("/user", userAuth); // This will check authorization for all routes under /user and will call next() if authorized
+// app.use("/admin", adminAuth); // This will check authorization for all routes under /admin and will call next() if authorized
+// app.use("/user", userAuth); // This will check authorization for all routes under /user and will call next() if authorized
 
 // OR
 
