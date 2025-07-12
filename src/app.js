@@ -4,7 +4,7 @@ const app = express();
 
 // Error handling middleware
 // Errors can handled by two ways:
-// 1. By using try-catch blocks in route handlers
+// 1. By using try-catch blocks in route handlers (Recommended way)
 // 2. By using error-handling middleware use app.use('/') route handler at end of the code
 
 app.get("/admin", (req, res, next) => {
