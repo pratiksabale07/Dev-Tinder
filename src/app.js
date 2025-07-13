@@ -1,27 +1,29 @@
 const express = require("express");
-
+const connectDB = require('./config/database');
+const User = require('./models/user')
 const app = express();
 
-// Error handling middleware
-// Errors can handled by two ways:
-// 1. By using try-catch blocks in route handlers (Recommended way)
-// 2. By using error-handling middleware use app.use('/') route handler at end of the code
-
-app.get("/admin", (req, res, next) => {
-  // try {
-    throw new Error("This is an error from the admin route");
-  // } catch (err) {
-  //   res.status(500).send("An error occurred in the admin route: " + err.message);
-  // }
-  // res.send("Admin route accessed");
-})
-
-app.use("/", (err, req, res, next) => {
-  if (err) {
-    res.status(500).send("An error occurred: " + err.message);
-  }
-})
-
-app.listen(7777, () => {
-  console.log("Server is successfully listening on port 7777...");
+connectDB().then(() => {
+  console.log("Database connected successfully...");
+  app.listen(7777, () => {
+    console.log("Server is successfully listening on port 7777...");
+  });
+}).catch((err) => {
+  console.error("Database connection failed");
 });
+
+app.post('/signup', async (req, res) => {
+  const user = new User({
+    firstName: 'Suraj',
+    lastName: 'Mali',
+    email: 'Suraj@gmail.com',
+    password: 'Pass@12345'
+    })
+    try{
+      await user.save()
+      res.send('User added successFully')
+    } catch(err) {
+      console.error(err)
+      res.status(400).send(err.message)
+    }
+ })
