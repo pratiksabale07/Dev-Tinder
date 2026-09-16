@@ -17,7 +17,7 @@ app.post('/signup', async (req, res) => {
     firstName: 'Suraj',
     lastName: 'Mali',
     email: 'Suraj@gmail.com',
-    password: 'Pass@12345'
+    password: 'Pass@12345',
     })
     try{
       await user.save()
