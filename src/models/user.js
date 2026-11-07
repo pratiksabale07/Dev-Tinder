@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const { validator } = require('validator')
 
 const userSchema = new Schema({
     firstName: {
@@ -16,11 +17,21 @@ const userSchema = new Schema({
         required: true,
         lowerCase: true,
         unique: true,
-        trim: true
+        trim: true,
+        validate(value) {
+            if (!validator.isEmail(value)) {
+                throw new Error('Invalid email address')
+            }
+        }
     },
     password: {
         type: String,
-        required: true
+        required: true,
+         validate(value) {
+            if (!validator.isStrongPassword(value)) {
+                throw new Error('Enter a strong password')
+            }
+        }
     },
     age: {
         type: Number,
@@ -35,7 +46,13 @@ const userSchema = new Schema({
         }
     },
     photoURL: {
-        type: String
+        type: String,
+        default: "https://img.magnific.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3467.jpg?semt=ais_hybrid&w=740&q=80",
+        validate(value) {
+            if (!validator.isURL(value)) {
+                throw new Error('Invalid Photo URL')
+            }
+        }
     },
     about: {
         type: String,
