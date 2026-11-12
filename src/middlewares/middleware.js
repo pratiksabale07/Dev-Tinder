@@ -1,23 +1,24 @@
-// Use this middleware to check if the user is authorized
-// If authorized, call next() to proceed to the next middleware or route handler
-export const adminAuth = (req, res, next) => {
-    const token = "xyz";
-    const autorized = token === "xyz";
-    if (!autorized) {
-        res.status(401).send("Admin Unauthorized");
-    } else {
-        console.log("Admin authorized");
-        next();
-    }
-}
+const jwt = require('jsonwebtoken');
+const User = require('../models/user')
 
-export const userAuth = (req, res, next) => {
-    const token = "abc";
-    const autorized = token === "abc";
-    if (!autorized) {
-        res.status(401).send("User Unauthorized");
-    } else {
-        console.log("User authorized");
+const userAuth = async (req, res, next) => {
+    try {
+        const { token } = req.cookies;
+        if(!token){
+            throw new Error("Token is not valid");
+        }
+        const decodedObj = await jwt.verify(token, "DEV@Tinder$790");
+        const { _id } = decodedObj;
+        const user = await User.findById(_id);
+        if (!user) {
+            throw new Error("User not found")
+        }
         next();
+    } catch (err) {
+        res.status(400).send("ERROR" + err.message);
     }
+};
+
+module.exports = {
+    userAuth
 }
