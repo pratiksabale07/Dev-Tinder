@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const validator = require('validator');
+const bcrypt = require("bcrypt");
+
 
 const userSchema = new Schema({
     firstName: {
@@ -27,7 +29,7 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true,
-         validate(value) {
+        validate(value) {
             if (!validator.isStrongPassword(value)) {
                 throw new Error('Enter a strong password')
             }
@@ -62,5 +64,17 @@ const userSchema = new Schema({
         type: [String]
     }
 }, { timestamps: true });
+
+userSchema.methods.getJWT = async function () {
+    const user = this;
+    const token = await jwt.sign({ _id: user._id }, "DEV@Tinder$790", { expiresIn: "1d" })
+    return token;
+}
+
+userSchema.methods.validatePassword = async function (password) {
+    const user = this;
+    const isPasswordValid = bcrypt.compare(password, user.password);
+    return isPasswordValid;
+}
 
 module.exports = mongoose.model('User', userSchema);
