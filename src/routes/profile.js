@@ -1,6 +1,6 @@
 const express = require("express");
 const profileRouter = express.Router();
-const { userAuth } = require("../middlewares/middleware");
+const { userAuth } = require("../middlewares/auth");
 const { validateEditProfileData } = require("../utils/validation");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
