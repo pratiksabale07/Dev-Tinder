@@ -12,7 +12,7 @@ const userSchema = new Schema({
         minLength: 3,
         maxLength: 10
     },
-    laseName: {
+    lastName: {
         type: String,
     },
     email: {
@@ -75,7 +75,6 @@ userSchema.methods.getJWT = async function () {
 userSchema.methods.validatePassword = async function (password) {
     const user = this;
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log(isPasswordValid);
     return isPasswordValid;
 }
 

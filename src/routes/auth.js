@@ -21,8 +21,11 @@ authRouter.post("/signup", async (req, res) => {
             skills
         });
 
-        await user.save();
-        res.send("User Added successfully!");
+        const savedUser = await user.save();
+        const token = await savedUser.getJWT();
+        res.cookie("token", token, { expires: new Date(Date.now() + 8 * 3600000) });
+        res.send(user);
+
     } catch (err) {
         res.status(400).send("Error : " + err.message);
     }
@@ -39,7 +42,7 @@ authRouter.post("/login", async (req, res) => {
         if (isPasswordValid) {
             const token = await user.getJWT();
             res.cookie("token", token, { expires: new Date(Date.now() + 8 * 3600000) });
-            res.send("Login Sucess");
+            res.send(user);
         } else {
             throw new Error("Invalid Credentials");
         }
@@ -49,8 +52,8 @@ authRouter.post("/login", async (req, res) => {
     }
 });
 
-authRouter.post("/logout", async(req, res) => {
-    res.cookie("token", null, { expires: new Date(Date.now())});
+authRouter.post("/logout", async (req, res) => {
+    res.cookie("token", null, { expires: new Date(Date.now()) });
     res.send("User logged out")
 });
 
